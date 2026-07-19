@@ -1,4 +1,8 @@
 <script>
+  // Local UI preview only. This value is public and must never match the
+  // production ADMIN_PIN stored in Apps Script Script Properties.
+  const LOCAL_PREVIEW_ADMIN_PIN = "770880";
+
   // Bilingual translation dictionary
   const i18n = {
     en: {
@@ -97,7 +101,7 @@
       // Admin area
       adminHeader: "Authorized Personnel Login",
       adminSub: "Enter the administrative security PIN to view recorded employee sheets.",
-      adminPinPlaceholder: "Enter 4-digit PIN",
+      adminPinPlaceholder: "Enter admin PIN",
       adminAccessBtn: "Access Admin Dashboard",
       backToHomeBtn: "Back to Home",
       adminStatsHeader: "Dashboard Metrics",
@@ -979,11 +983,29 @@
     
     showLoader(true);
     
-    // Admin authentication requires the Apps Script backend. Never embed a
-    // real administrative PIN or submission data in public client code.
+    // Local preview uses a public mock PIN and never loads production data.
+    // Deployed Apps Script pages always use the secure server-side branch.
     if (typeof google === 'undefined' || typeof google.script === 'undefined') {
-      showLoader(false);
-      showToast("error", "Admin login is available only on the deployed Apps Script portal.");
+      setTimeout(() => {
+        if (pin === LOCAL_PREVIEW_ADMIN_PIN) {
+          onAdminLoginSuccess({
+            success: true,
+            message: "Local preview authorization successful.",
+            data: {
+              submissions: [],
+              stats: {
+                totalEmployees: 0,
+                totalPendingSalary: 0
+              }
+            }
+          });
+        } else {
+          onAdminLoginSuccess({
+            success: false,
+            message: "Invalid local preview PIN."
+          });
+        }
+      }, 300);
       return;
     }
 
