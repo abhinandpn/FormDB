@@ -11,6 +11,19 @@
 var GOOGLE_FORM_URL = "https://docs.google.com/forms/d/1OI3ZY51dfsIVLPXkLtrshGBLF21ehrvOkzyfdi1Q5QY/edit";
 
 /**
+ * Run once from the Apps Script editor after changing required permissions.
+ * Authorizes access to the configured database Sheet and Google Form without
+ * creating or modifying a submission.
+ */
+function authorizeServices() {
+  var spreadsheet = getSpreadsheet();
+  var form = FormApp.openByUrl(GOOGLE_FORM_URL);
+
+  Logger.log("Spreadsheet connected: " + spreadsheet.getName());
+  Logger.log("Form connected: " + form.getTitle());
+}
+
+/**
  * Handles HTTP GET requests to serve the web application.
  * @param {Object} e HTTP event parameters
  * @return {HtmlOutput} The rendered HTML interface
