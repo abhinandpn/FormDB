@@ -120,19 +120,25 @@ function submitToGoogleForm(data) {
       "phone number": data.phoneNumber,
       "email address": data.email,
       "employee id": data.employeeId || "",
+      "employee id (optional)": data.employeeId || "",
       "designation": data.designation,
       "last drawn monthly salary": data.salary,
       "date of joining": data.dateOfJoining,
       "employment status": data.employmentStatus,
       "date of resignation / termination": data.dateOfLeaving || "",
+      "date of resignation": data.dateOfLeaving || "",
+      "date of termination": data.dateOfLeaving || "",
       "reason for resignation / termination": data.reason || "",
+      "reason for resignation": data.reason || "",
+      "reason for termination": data.reason || "",
       "benefits / amount already received": data.benefitsReceived,
       "benefits / amount already received from the company": data.benefitsReceived,
       "pending salary": data.pendingSalary,
       "retrenchment compensation amount": data.retrenchmentCompensation,
       "other pending compensation benefits": data.otherCompensation,
       "have you already filled out the google form given by the employment commission?": data.commissionFormFilled,
-      "declaration": data.declaration
+      "declaration": data.declaration,
+      "i hereby declare that the information provided above is true and accurate to the best of my knowledge.": data.declaration
     };
 
     var form = FormApp.openByUrl(GOOGLE_FORM_URL);
