@@ -1,0 +1,1307 @@
+<script>
+  // Bilingual translation dictionary
+  const i18n = {
+    en: {
+      appName: "Talrop Employee Details Verification System",
+      subAppName: "Verification Portal",
+      formTab: "Verification Form",
+      adminTab: "Admin Portal",
+      langBtn: "മലയാളം",
+      
+      introPara1: "This form is created to collect accurate and verified information from Talrop employees, as some previously submitted records contain duplicate, incomplete, or incorrect details.",
+      introPara2: "Please provide your correct information to help prepare a single, verified employee database for pending salary, gratuity, and other employment-related claims.",
+      introPara3: "Kindly submit this form only once and ensure all information is accurate before submitting.",
+      commFormQ: "Have you already filled out the Google Form given by the Employment Commission?",
+      yesOpt: "Yes",
+      noOpt: "No",
+      errCommForm: "Please select whether you filled out the Commission Google Form.",
+      tableColComm: "Commission Form?",
+      
+      // Personal Info Card
+      personalHeader: "Personal Information",
+      personalSub: "Enter your official personal identification details",
+      empNameLabel: "Employee Name",
+      empNamePlaceholder: "Enter full name",
+      phoneLabel: "Phone Number",
+      phonePlaceholder: "10-digit mobile number",
+      emailLabel: "Email Address",
+      emailPlaceholder: "example@domain.com",
+      empIdLabel: "Employee ID (Optional)",
+      empIdPlaceholder: "e.g., TLR-2026-0099",
+      
+      // Employment Info Card
+      employmentHeader: "Employment Details",
+      employmentSub: "Provide your record of service inside the company",
+      designationLabel: "Designation",
+      designationPlaceholder: "e.g., Software Engineer",
+      salaryLabel: "Last Drawn Monthly Salary",
+      salaryPlaceholder: "Monthly basic salary in INR",
+      joiningDateLabel: "Date of Joining",
+      leavingDateLabel: "Date of Resignation / Termination",
+      leavingDateResigned: "Date of Resignation",
+      leavingDateTerminated: "Date of Termination",
+      statusLabel: "Employment Status",
+      statusSelect: "Select Employment Status",
+      statusWorking: "Still Working",
+      statusResigned: "Resigned",
+      statusTerminated: "Terminated",
+      reasonLabel: "Reason for Resignation / Termination",
+      reasonResigned: "Reason for Resignation",
+      reasonTerminated: "Reason for Termination",
+      reasonPlaceholder: "Provide detailed explanation for leaving",
+      reasonResignedPlaceholder: "Provide detailed explanation for resignation",
+      reasonTerminatedPlaceholder: "Provide detailed explanation for termination",
+      
+      // Compensation Card
+      compensationHeader: "Compensation Details",
+      compensationSub: "Declare outstanding dues and payments (INR)",
+      benefitsLabel: "Benefits / Amount Already Received from the Company",
+      benefitsPlaceholder: "Amount in INR. Enter 0 if none.",
+      pendingSalaryLabel: "Pending Salary",
+      pendingSalaryPlaceholder: "Amount in INR. Enter 0 if none.",
+      retrenchmentLabel: "Retrenchment Compensation Amount",
+      retrenchmentPlaceholder: "Amount in INR. Enter 0 if none.",
+      otherCompLabel: "Other Pending Compensation Benefits",
+      otherCompPlaceholder: "Amount in INR. Enter 0 if none.",
+      
+      // Declaration Card
+      declarationHeader: "Declaration",
+      declarationSub: "Please read and confirm the accuracy of information",
+      declarationText: "I hereby declare that the information provided above is true and accurate to the best of my knowledge.",
+      submitBtn: "Verify & Submit Details",
+      submitProcessing: "Processing Submission...",
+      
+      // Error alerts
+      errNameLength: "Employee Name must be at least 3 characters.",
+      errPhoneFormat: "Enter a valid 10-digit Indian mobile number (starts with 6-9).",
+      errEmailFormat: "Please enter a valid email format.",
+      errEmailRequired: "Email Address is required.",
+      errDesignation: "Designation is required.",
+      errSalary: "Please enter a valid monthly salary (greater than or equal to 0).",
+      errJoiningDate: "Date of Joining is required and cannot be in the future.",
+      errLeavingDate: "Date of Leaving is required and cannot be in the future.",
+      errLeavingChronology: "Date of Joining must be before or equal to Date of Leaving.",
+      errReason: "Please provide a reason (minimum 5 characters).",
+      errBenefits: "Please enter a valid amount already received (>= 0).",
+      errPendingSalary: "Please enter a valid pending salary amount (>= 0).",
+      errRetrenchment: "Please enter a valid retrenchment compensation (>= 0).",
+      errOtherComp: "Please enter a valid other compensation amount (>= 0).",
+      errDeclaration: "You must accept the declaration to submit.",
+      errFormGeneric: "Please fix the validation errors in red before submitting.",
+      
+      // Success screen
+      successHeader: "Details Verified Successfully",
+      successDesc: "Your details have been securely recorded. Please note down your unique Submission ID for future reference.",
+      successBtn: "Submit Another Form",
+      
+      // Admin area
+      adminHeader: "Authorized Personnel Login",
+      adminSub: "Enter the administrative security PIN to view recorded employee sheets.",
+      adminPinPlaceholder: "Enter 4-digit PIN",
+      adminAccessBtn: "Access Admin Dashboard",
+      backToHomeBtn: "Back to Home",
+      adminStatsHeader: "Dashboard Metrics",
+      statTotalEmployees: "Total Submissions",
+      statTotalPending: "Total Pending Dues (INR)",
+      statStillWorking: "Active Employees",
+      statExited: "Exited (Resigned/Terminated)",
+      
+      filterHeader: "Search and Filters",
+      searchPlaceholder: "Search by Name, Phone, or ID...",
+      filterStatus: "Filter by Status",
+      filterDesignation: "Filter by Designation",
+      allOptions: "All Records",
+      exportBtn: "Export to Excel (CSV)",
+      
+      tableColId: "ID",
+      tableColName: "Employee Name",
+      tableColPhone: "Phone Number",
+      tableColDesignation: "Designation",
+      tableColStatus: "Status",
+      tableColPending: "Pending Salary",
+      tableColJoined: "Joined On",
+      tableColLeft: "Exited On"
+    },
+    mal: {
+      appName: "ടാൽറോപ്പ് എംപ്ലോയീ വെരിഫിക്കേഷൻ സിസ്റ്റം",
+      subAppName: "വെരിഫിക്കേഷൻ പോർട്ടൽ",
+      formTab: "വെരിഫിക്കേഷൻ ഫോം",
+      adminTab: "അഡ്മിൻ പോർട്ടൽ",
+      langBtn: "English",
+      
+      introPara1: "മുമ്പ് സമർപ്പിച്ച ചില വിവരങ്ങളിൽ ആവർത്തനങ്ങളോ അപൂർണ്ണതകളോ തെറ്റുകളോ ഉള്ളതിനാൽ, ടാൽറോപ്പ് ജീവനക്കാരിൽ നിന്ന് കൃത്യവും പരിശോധിച്ചുറപ്പിച്ചതുമായ വിവരങ്ങൾ ശേഖരിക്കുന്നതിനാണ് ഈ ഫോം തയ്യാറാക്കിയിരിക്കുന്നത്.",
+      introPara2: "കുടിശ്ശികയുള്ള ശമ്പളം, ഗ്രാറ്റുവിറ്റി, മറ്റ് ജോലി സംബന്ധമായ ക്ലെയിമുകൾ എന്നിവയ്ക്കായി പരിശോധിച്ചുറപ്പിച്ച ഒരൊറ്റ ജീവനക്കാരുടെ ഡാറ്റാബേസ് തയ്യാറാക്കാൻ നിങ്ങളുടെ ശരിയായ വിവരങ്ങൾ നൽകുക.",
+      introPara3: "ഈ ഫോം ഒരിക്കൽ മാത്രം സമർപ്പിക്കുക, സമർപ്പിക്കുന്നതിന് മുമ്പ് എല്ലാ വിവരങ്ങളും കൃത്യമാണെന്ന് ഉറപ്പുവരുത്തുക.",
+      commFormQ: "എംപ്ലോയ്മെന്റ് കമ്മീഷൻ നൽകിയ ഗൂഗിൾ ഫോം നിങ്ങൾ ഇതിനകം പൂരിപ്പിച്ചിട്ടുണ്ടോ?",
+      yesOpt: "അതെ (Yes)",
+      noOpt: "അല്ല (No)",
+      errCommForm: "കമ്മീഷൻ ഗൂഗിൾ ഫോം പൂരിപ്പിച്ചിട്ടുണ്ടോ എന്ന് തിരഞ്ഞെടുക്കുക.",
+      tableColComm: "കമ്മീഷൻ ഫോം?",
+      
+      // Personal Info Card
+      personalHeader: "വ്യക്തിഗത വിവരങ്ങൾ",
+      personalSub: "നിങ്ങളുടെ ഔദ്യോഗിക വിവരങ്ങൾ ഇവിടെ രേഖപ്പെടുത്തുക",
+      empNameLabel: "ജീവനക്കാരന്റെ പേര്",
+      empNamePlaceholder: "മുഴുവൻ പേര് നൽകുക",
+      phoneLabel: "ഫോൺ നമ്പർ",
+      phonePlaceholder: "10 അക്ക മൊബൈൽ നമ്പർ",
+      emailLabel: "ഇമെയിൽ വിലാസം",
+      emailPlaceholder: "example@domain.com",
+      empIdLabel: "എംപ്ലോയീ ഐഡി (നിർബന്ധമില്ല)",
+      empIdPlaceholder: "ഉദാഹരണത്തിന്, TLR-2026-0099",
+      
+      // Employment Info Card
+      employmentHeader: "തൊഴിൽ വിവരങ്ങൾ",
+      employmentSub: "കമ്പനിയിലെ നിങ്ങളുടെ ജോലി വിവരങ്ങൾ നൽകുക",
+      designationLabel: "തസ്തിക (Designation)",
+      designationPlaceholder: "ഉദാഹരണത്തിന്, Software Engineer",
+      salaryLabel: "അവസാനം വാങ്ങിയ പ്രതിമാസ ശമ്പളം",
+      salaryPlaceholder: "പ്രതിമാസ ശമ്പളം (രൂപയിൽ)",
+      joiningDateLabel: "ജോലിയിൽ പ്രവേശിച്ച തീയതി",
+      leavingDateLabel: "രാജി വെച്ച/പിരിച്ചുവിട്ട തീയതി",
+      leavingDateResigned: "രാജി വെച്ച തീയതി",
+      leavingDateTerminated: "പിരിച്ചുവിട്ട തീയതി",
+      statusLabel: "തൊഴിൽ നില (Status)",
+      statusSelect: "തൊഴിൽ നില തിരഞ്ഞെടുക്കുക",
+      statusWorking: "ഇപ്പോഴും ജോലി ചെയ്യുന്നു (Still Working)",
+      statusResigned: "രാജി വെച്ചു (Resigned)",
+      statusTerminated: "പിരിച്ചുവിട്ടു (Terminated)",
+      reasonLabel: "രാജി വെക്കാൻ/പിരിച്ചുവിടാനുള്ള കാരണം",
+      reasonResigned: "രാജി വെക്കാനുള്ള കാരണം",
+      reasonTerminated: "പിരിച്ചുവിടാനുള്ള കാരണം",
+      reasonPlaceholder: "പിരിഞ്ഞുപോകാനുള്ള കാരണം വിശദീകരിക്കുക",
+      reasonResignedPlaceholder: "രാജി വെക്കാനുള്ള കാരണം വിശദീകരിക്കുക",
+      reasonTerminatedPlaceholder: "പിരിച്ചുവിടാനുള്ള കാരണം വിശദീകരിക്കുക",
+      
+      // Compensation Card
+      compensationHeader: "ആനുകൂല്യ വിവരങ്ങൾ",
+      compensationSub: "കമ്പനിയിൽ നിന്ന് ലഭിക്കാനുള്ളതോ ലഭിച്ചതോ ആയ തുകകൾ",
+      benefitsLabel: "കമ്പനിയിൽ നിന്ന് ഇതിനകം ലഭിച്ച ആനുകൂല്യങ്ങൾ / തുക",
+      benefitsPlaceholder: "ലഭിച്ച തുക. ഇല്ലെങ്കിൽ 0 നൽകുക.",
+      pendingSalaryLabel: "ലഭിക്കാനുള്ള ശമ്പളം (Pending Salary)",
+      pendingSalaryPlaceholder: "ലഭിക്കാനുള്ള ശമ്പളം. ഇല്ലെങ്കിൽ 0 നൽകുക.",
+      retrenchmentLabel: "പിരിച്ചുവിടൽ നഷ്ടപരിഹാരം",
+      retrenchmentPlaceholder: "തുക. ഇല്ലെങ്കിൽ 0 നൽകുക.",
+      otherCompLabel: "മറ്റ് ആനുകൂല്യങ്ങൾ",
+      otherCompPlaceholder: "തുക. ഇല്ലെങ്കിൽ 0 നൽകുക.",
+      
+      // Declaration Card
+      declarationHeader: "പ്രഖ്യാപനം",
+      declarationSub: "വിവരങ്ങൾ ശരിയാണെന്ന് പരിശോധിച്ച് ഉറപ്പുവരുത്തുക",
+      declarationText: "മുകളിൽ നൽകിയിരിക്കുന്ന വിവരങ്ങൾ എന്റെ അറിവിൽ സത്യവും കൃത്യവുമാണെന്ന് ഞാൻ ഇതിനാൽ പ്രഖ്യാപിക്കുന്നു.",
+      submitBtn: "വിവരങ്ങൾ സമർപ്പിക്കുക",
+      submitProcessing: "സമർപ്പിച്ചുകൊണ്ടിരിക്കുന്നു...",
+      
+      // Error alerts
+      errNameLength: "ജീവനക്കാരന്റെ പേരിൽ കുറഞ്ഞത് 3 അക്ഷരങ്ങൾ വേണം.",
+      errPhoneFormat: "6-9 ൽ തുടങ്ങുന്ന 10 അക്ക ഇന്ത്യൻ മൊബൈൽ നമ്പർ നൽകുക.",
+      errEmailFormat: "ശരിയായ ഇമെയിൽ വിലാസം നൽകുക.",
+      errEmailRequired: "ഇമെയിൽ വിലാസം ആവശ്യമാണ്.",
+      errDesignation: "തസ്തിക രേഖപ്പെടുത്തേണ്ടത് നിർബന്ധമാണ്.",
+      errSalary: "പ്രതിമാസ ശമ്പളം ശരിയായി നൽകുക (0 അല്ലെങ്കിൽ അതിൽ കൂടുതൽ).",
+      errJoiningDate: "ജോലിയിൽ പ്രവേശിച്ച തീയതി ആവശ്യമാണ് (ഭാവി തീയതി ആകരുത്).",
+      errLeavingDate: "പിരിഞ്ഞുപോയ തീയതി ആവശ്യമാണ് (ഭാവി തീയതി ആകരുത്).",
+      errLeavingChronology: "ജോലിയിൽ പ്രവേശിച്ച തീയതി പിരിഞ്ഞുപോയ തീയതിയേക്കാൾ മുമ്പുള്ളതാകണം.",
+      errReason: "പിരിഞ്ഞുപോകാനുള്ള കാരണം വ്യക്തമാക്കുക (കുറഞ്ഞത് 5 അക്ഷരങ്ങൾ).",
+      errBenefits: "കമ്പനിയിൽ നിന്ന് ലഭിച്ച തുക ശരിയായി നൽകുക (>= 0).",
+      errPendingSalary: "ലഭിക്കാനുള്ള ശമ്പളം ശരിയായി നൽകുക (>= 0).",
+      errRetrenchment: "നഷ്ടപരിഹാര തുക ശരിയായി നൽകുക (>= 0).",
+      errOtherComp: "മറ്റ് ആനുകൂല്യങ്ങൾ ശരിയായി നൽകുക (>= 0).",
+      errDeclaration: "സമർപ്പിക്കുന്നതിന് മുമ്പ് പ്രഖ്യാപനം അംഗീകരിക്കുക.",
+      errFormGeneric: "ചുവന്ന അടയാളമുള്ള വാലിഡേഷൻ തെറ്റുകൾ തിരുത്തിയ ശേഷം വീണ്ടും ശ്രമിക്കുക.",
+      
+      // Success screen
+      successHeader: "വിവരങ്ങൾ വിജയകരമായി സമർപ്പിച്ചു",
+      successDesc: "നിങ്ങളുടെ വിവരങ്ങൾ സുരക്ഷിതമായി രേഖപ്പെടുത്തിയിട്ടുണ്ട്. ഭാവിയിലെ ആവശ്യങ്ങൾക്കായി താഴെയുള്ള സബ്മിഷൻ ഐഡി കുറിച്ചുവെക്കുക.",
+      successBtn: "മറ്റൊരു ഫോം സമർപ്പിക്കുക",
+      
+      // Admin area
+      adminHeader: "അഡ്മിൻ പ്രവേശനം",
+      adminSub: "രേഖപ്പെടുത്തിയ സബ്മിഷനുകൾ കാണുന്നതിന് 4 അക്ക സുരക്ഷാ കോഡ് നൽകുക.",
+      adminPinPlaceholder: "അഡ്മിൻ കോഡ് നൽകുക",
+      adminAccessBtn: "ഡാഷ്‌ബോർഡ് തുറക്കുക",
+      backToHomeBtn: "ഹോം പേജിലേക്ക്",
+      adminStatsHeader: "ഡാഷ്‌ബോർഡ് സ്ഥിതിവിവരങ്ങൾ",
+      statTotalEmployees: "ആകെ സബ്മിഷനുകൾ",
+      statTotalPending: "ആകെ നൽകാനുള്ള ശമ്പളം (രൂപ)",
+      statStillWorking: "ഇപ്പോഴും ജോലി ചെയ്യുന്നവർ",
+      statExited: "പിരിഞ്ഞുപോയവർ",
+      
+      filterHeader: "തിരച്ചിലും ഫിൽട്ടറുകളും",
+      searchPlaceholder: "പേര്, ഫോൺ, അല്ലെങ്കിൽ ഐഡി വെച്ച് തിരയുക...",
+      filterStatus: "തൊഴിൽ നില വെച്ച് ഫിൽട്ടർ ചെയ്യുക",
+      filterDesignation: "തസ്തിക വെച്ച് ഫിൽട്ടർ ചെയ്യുക",
+      allOptions: "എല്ലാ വിവരങ്ങളും",
+      exportBtn: "എക്സലിലേക്ക് മാറ്റുക (CSV)",
+      
+      tableColId: "ഐഡി",
+      tableColName: "പേര്",
+      tableColPhone: "ഫോൺ നമ്പർ",
+      tableColDesignation: "തസ്തിക",
+      tableColStatus: "സ്റ്റാറ്റസ്",
+      tableColPending: "നൽകാനുള്ള ശമ്പളം",
+      tableColJoined: "തുടങ്ങിയ തീയതി",
+      tableColLeft: "പിരിഞ്ഞ തീയതി"
+    }
+  };
+
+  // State Management variables
+  let currentLanguage = "en";
+  let activeTab = "form"; // "form" or "admin"
+  let allSubmissions = [];
+  let uniqueDesignations = new Set();
+
+  /**
+   * Initializes application listeners and translates UI.
+   */
+  function initializeApp() {
+    // Initial UI Translation
+    translateUI();
+    
+    // Set up status dependency layout toggle
+    const statusSelect = document.getElementById("employmentStatus");
+    if (statusSelect) {
+      statusSelect.addEventListener("change", handleStatusChange);
+    }
+    
+    // Trigger initial status display toggle
+    handleStatusChange();
+    
+    // Real-time validation listeners
+    setupRealtimeValidation();
+    
+    // Form submit listener
+    const mainForm = document.getElementById("employeeVerificationForm");
+    if (mainForm) {
+      mainForm.addEventListener("submit", handleFormSubmit);
+    }
+    
+    // Admin login challenge form
+    const adminLoginForm = document.getElementById("adminLoginForm");
+    if (adminLoginForm) {
+      adminLoginForm.addEventListener("submit", handleAdminLogin);
+    }
+    
+    // Search and filter listeners for Admin View
+    const searchBox = document.getElementById("searchBox");
+    if (searchBox) searchBox.addEventListener("input", renderAdminTable);
+    
+    const statusFilter = document.getElementById("statusFilter");
+    if (statusFilter) statusFilter.addEventListener("change", renderAdminTable);
+    
+    const designationFilter = document.getElementById("designationFilter");
+    if (designationFilter) designationFilter.addEventListener("change", renderAdminTable);
+    
+    // Reset Form button
+    const btnNewForm = document.getElementById("btnNewForm");
+    if (btnNewForm) btnNewForm.addEventListener("click", resetVerificationForm);
+  }
+
+  // Safe Initialization: Execute immediately if DOM is already fully interactive
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    initializeApp();
+  } else {
+    document.addEventListener("DOMContentLoaded", initializeApp);
+  }
+
+  /**
+   * Switches the interface language between English and Malayalam.
+   */
+  function toggleLanguage() {
+    currentLanguage = (currentLanguage === "en") ? "mal" : "en";
+    translateUI();
+    
+    // Re-validate fields to update error messages to the toggled language
+    revalidateActiveFields();
+  }
+
+  /**
+   * Translates all elements marked with translation attributes.
+   */
+  function translateUI() {
+    const langData = i18n[currentLanguage];
+    
+    // Translate textContent for elements with data-i18n
+    document.querySelectorAll("[data-i18n]").forEach(element => {
+      const key = element.getAttribute("data-i18n");
+      if (langData[key]) {
+        element.textContent = langData[key];
+      }
+    });
+
+    // Translate placeholder attributes
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+      const key = element.getAttribute("data-i18n-placeholder");
+      if (langData[key]) {
+        element.setAttribute("placeholder", langData[key]);
+      }
+    });
+    
+    // Special translation for select dropdown defaults
+    const statusSelect = document.getElementById("employmentStatus");
+    const selectPlaceholderOption = statusSelect.options[0];
+    if (selectPlaceholderOption) {
+      selectPlaceholderOption.textContent = langData.statusSelect;
+    }
+    
+    const optWorking = statusSelect.querySelector("option[value='Still Working']");
+    if (optWorking) optWorking.textContent = langData.statusWorking;
+    
+    const optResigned = statusSelect.querySelector("option[value='Resigned']");
+    if (optResigned) optResigned.textContent = langData.statusResigned;
+    
+    const optTerminated = statusSelect.querySelector("option[value='Terminated']");
+    if (optTerminated) optTerminated.textContent = langData.statusTerminated;
+    
+    // Refresh context-dependent labels (e.g. Date of Resignation vs. Date of Termination)
+    handleStatusChange();
+  }
+
+  /**
+   * Toggles display tabs between Employee Form and Admin Panel.
+   * @param {string} tabName Target tab ("form" or "admin")
+   */
+  function switchTab(tabName) {
+    if (activeTab === tabName) return;
+    activeTab = tabName;
+    
+    const formTabBtn = document.getElementById("tabBtnForm");
+    const adminTabBtn = document.getElementById("tabBtnAdmin");
+    
+    const formView = document.getElementById("formViewPane");
+    const adminView = document.getElementById("adminViewPane");
+    const successView = document.getElementById("successViewPane");
+    
+    if (tabName === "form") {
+      // Toggle button visibility in header
+      formTabBtn.style.display = "none";
+      adminTabBtn.style.display = "inline-flex";
+      
+      // Set headers active styles
+      formTabBtn.classList.add("active");
+      adminTabBtn.classList.remove("active");
+      
+      // Toggle panes
+      formView.classList.add("active");
+      adminView.classList.remove("active");
+      successView.classList.remove("active");
+    } else {
+      // Toggle button visibility in header
+      adminTabBtn.style.display = "none";
+      formTabBtn.style.display = "inline-flex";
+      
+      // Set headers active styles
+      adminTabBtn.classList.add("active");
+      formTabBtn.classList.remove("active");
+      
+      // Toggle panes
+      adminView.classList.add("active");
+      formView.classList.remove("active");
+      successView.classList.remove("active");
+    }
+  }
+
+  /**
+   * Sets the value of the commission form toggle selection.
+   * Updates visual styling of active segment buttons.
+   * @param {string} value "Yes" or "No"
+   */
+  function selectCommissionFormSegment(value) {
+    const input = document.getElementById("commissionFormFilled");
+    input.value = value;
+    
+    const segmentBg = document.getElementById("segmentBg");
+    const btnYes = document.getElementById("btnOptYes");
+    const btnNo = document.getElementById("btnOptNo");
+    
+    if (segmentBg) {
+      segmentBg.style.opacity = "1";
+      if (value === 'Yes') {
+        segmentBg.style.transform = "translateX(0)";
+        if (btnYes) btnYes.style.color = "white";
+        if (btnNo) btnNo.style.color = "var(--primary-dark)";
+      } else {
+        segmentBg.style.transform = "translateX(100%)";
+        if (btnNo) btnNo.style.color = "white";
+        if (btnYes) btnYes.style.color = "var(--primary-dark)";
+      }
+    }
+    
+    // Validate in real-time
+    validateField("commissionFormFilled");
+  }
+
+  /**
+   * Shows or hides conditional sections based on selection.
+   */
+  function handleStatusChange() {
+    const status = document.getElementById("employmentStatus").value;
+    const leavingSection = document.getElementById("leavingSection");
+    const leavingDateSpan = document.querySelector('[data-i18n="leavingDateLabel"]');
+    const reasonSpan = document.querySelector('[data-i18n="reasonLabel"]');
+    const langData = i18n[currentLanguage];
+    
+    // Resigned and Terminated require leaving details
+    if (status === "Resigned" || status === "Terminated") {
+      leavingSection.style.display = "block";
+      
+      // Update labels dynamically based on specific exited status
+      if (status === "Resigned") {
+        if (leavingDateSpan) leavingDateSpan.textContent = langData.leavingDateResigned;
+        if (reasonSpan) reasonSpan.textContent = langData.reasonResigned;
+        document.getElementById("reason").setAttribute("placeholder", langData.reasonResignedPlaceholder);
+      } else {
+        if (leavingDateSpan) leavingDateSpan.textContent = langData.leavingDateTerminated;
+        if (reasonSpan) reasonSpan.textContent = langData.reasonTerminated;
+        document.getElementById("reason").setAttribute("placeholder", langData.reasonTerminatedPlaceholder);
+      }
+    } else {
+      leavingSection.style.display = "none";
+      // Clear values if hidden
+      document.getElementById("dateOfLeaving").value = "";
+      document.getElementById("reason").value = "";
+      clearFieldError("dateOfLeaving");
+      clearFieldError("reason");
+    }
+  }
+
+  /* ------------------- Form Validation Logic ------------------- */
+
+  /**
+   * Binds focus out and input events for real-time validation checks.
+   */
+  function setupRealtimeValidation() {
+    const fields = [
+      "employeeName", "phoneNumber", "email", "designation", 
+      "salary", "dateOfJoining", "dateOfLeaving", "reason",
+      "benefitsReceived", "pendingSalary", "retrenchmentCompensation", "otherCompensation"
+    ];
+    
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        // Run validation on blur
+        el.addEventListener("blur", () => validateField(id));
+        // Clear red error highlights during writing
+        el.addEventListener("input", () => {
+          if (el.classList.contains("invalid")) {
+            validateField(id);
+          }
+        });
+      }
+    });
+
+    document.getElementById("declaration").addEventListener("change", function() {
+      validateField("declaration");
+    });
+  }
+
+  /**
+   * Re-evaluates active validation fields.
+   */
+  function revalidateActiveFields() {
+    const activeErrors = document.querySelectorAll(".form-control.invalid");
+    activeErrors.forEach(el => {
+      validateField(el.id);
+    });
+    
+    const decCheckbox = document.getElementById("declaration");
+    if (decCheckbox.closest(".declaration-wrapper").style.border) {
+      validateField("declaration");
+    }
+  }
+
+  /**
+   * Validates a single input field. Updates UI and errors.
+   * @param {string} id Field ID
+   * @return {boolean} True if field passes validation
+   */
+  function validateField(id) {
+    const el = document.getElementById(id);
+    if (!el) return true;
+    
+    const val = el.value.trim();
+    const langData = i18n[currentLanguage];
+    let isValid = true;
+    let errMsg = "";
+    
+    // Check if field is currently hidden in UI
+    if (id === "dateOfLeaving" || id === "reason") {
+      const status = document.getElementById("employmentStatus").value;
+      if (status !== "Resigned" && status !== "Terminated") {
+        clearFieldError(id);
+        return true;
+      }
+    }
+
+    switch(id) {
+      case "employeeName":
+        if (val.length < 3) {
+          isValid = false;
+          errMsg = langData.errNameLength;
+        }
+        break;
+        
+      case "commissionFormFilled":
+        if (val !== "Yes" && val !== "No") {
+          isValid = false;
+          errMsg = langData.errCommForm;
+        }
+        break;
+        
+      case "phoneNumber":
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(val)) {
+          isValid = false;
+          errMsg = langData.errPhoneFormat;
+        }
+        break;
+        
+      case "email":
+        if (val.length === 0) {
+          isValid = false;
+          errMsg = langData.errEmailRequired;
+        } else {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(val)) {
+            isValid = false;
+            errMsg = langData.errEmailFormat;
+          }
+        }
+        break;
+        
+      case "designation":
+        if (val.length === 0) {
+          isValid = false;
+          errMsg = langData.errDesignation;
+        }
+        break;
+        
+      case "salary":
+        if (val === "" || isNaN(val) || parseFloat(val) < 0) {
+          isValid = false;
+          errMsg = langData.errSalary;
+        }
+        break;
+        
+      case "dateOfJoining":
+        if (val === "" || isFutureDate(val)) {
+          isValid = false;
+          errMsg = langData.errJoiningDate;
+        }
+        break;
+        
+      case "dateOfLeaving":
+        if (val === "" || isFutureDate(val)) {
+          isValid = false;
+          errMsg = langData.errLeavingDate;
+        } else {
+          // Compare joining and leaving date
+          const joinVal = document.getElementById("dateOfJoining").value;
+          if (joinVal !== "" && !isFutureDate(joinVal)) {
+            if (new Date(joinVal) > new Date(val)) {
+              isValid = false;
+              errMsg = langData.errLeavingChronology;
+            }
+          }
+        }
+        break;
+        
+      case "reason":
+        if (val.length < 5) {
+          isValid = false;
+          errMsg = langData.errReason;
+        }
+        break;
+        
+      case "benefitsReceived":
+        if (val === "" || isNaN(val) || parseFloat(val) < 0) {
+          isValid = false;
+          errMsg = langData.errBenefits;
+        }
+        break;
+        
+      case "pendingSalary":
+        if (val === "" || isNaN(val) || parseFloat(val) < 0) {
+          isValid = false;
+          errMsg = langData.errPendingSalary;
+        }
+        break;
+        
+      case "retrenchmentCompensation":
+        if (val === "" || isNaN(val) || parseFloat(val) < 0) {
+          isValid = false;
+          errMsg = langData.errRetrenchment;
+        }
+        break;
+        
+      case "otherCompensation":
+        if (val === "" || isNaN(val) || parseFloat(val) < 0) {
+          isValid = false;
+          errMsg = langData.errOtherComp;
+        }
+        break;
+        
+      case "declaration":
+        if (!el.checked) {
+          isValid = false;
+          errMsg = langData.errDeclaration;
+        }
+        break;
+    }
+    
+    if (isValid) {
+      setFieldSuccess(id);
+    } else {
+      setFieldError(id, errMsg);
+    }
+    
+    return isValid;
+  }
+
+  /**
+   * Highlights field error and writes message below it.
+   */
+  function setFieldError(id, message) {
+    const el = document.getElementById(id);
+    if (id === "declaration") {
+      const wrapper = el.closest(".declaration-wrapper");
+      wrapper.style.borderColor = "var(--error)";
+      wrapper.style.backgroundColor = "var(--error-light)";
+      
+      const errBox = document.getElementById("error-declaration");
+      errBox.innerHTML = '<span class="material-icons-outlined" style="font-size: 14px; margin-right: 4px; display: inline-flex; align-items: center;">error_outline</span>' + message;
+      errBox.style.display = "flex";
+      return;
+    }
+    
+    if (id === "commissionFormFilled") {
+      const container = document.getElementById("commFormSegmentContainer");
+      if (container) container.style.borderColor = "var(--error)";
+      
+      const errBox = document.getElementById("error-commissionFormFilled");
+      if (errBox) {
+        errBox.innerHTML = '<span class="material-icons-outlined" style="font-size: 14px; margin-right: 4px; display: inline-flex; align-items: center;">error_outline</span>' + message;
+        errBox.style.display = "flex";
+      }
+      return;
+    }
+    
+    el.classList.add("invalid");
+    el.classList.remove("valid");
+    
+    const errBox = document.getElementById("error-" + id);
+    if (errBox) {
+      errBox.innerHTML = '<span class="material-icons-outlined" style="font-size: 14px; margin-right: 4px; display: inline-flex; align-items: center;">error_outline</span>' + message;
+      errBox.style.display = "flex";
+    }
+  }
+
+  /**
+   * Highlights successful field values.
+   */
+  function setFieldSuccess(id) {
+    const el = document.getElementById(id);
+    if (id === "declaration") {
+      const wrapper = el.closest(".declaration-wrapper");
+      wrapper.style.borderColor = "var(--success)";
+      wrapper.style.backgroundColor = "#f9fff9";
+      
+      const errBox = document.getElementById("error-declaration");
+      errBox.textContent = "";
+      errBox.style.display = "none";
+      return;
+    }
+    
+    if (id === "commissionFormFilled") {
+      const container = document.getElementById("commFormSegmentContainer");
+      if (container) container.style.borderColor = "var(--success)";
+      
+      const errBox = document.getElementById("error-commissionFormFilled");
+      if (errBox) {
+        errBox.textContent = "";
+        errBox.style.display = "none";
+      }
+      return;
+    }
+    
+    el.classList.remove("invalid");
+    el.classList.add("valid");
+    
+    const errBox = document.getElementById("error-" + id);
+    if (errBox) {
+      errBox.textContent = "";
+      errBox.style.display = "none";
+    }
+  }
+
+  /**
+   * Resets field styling back to standard values.
+   */
+  function clearFieldError(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    if (id === "declaration") {
+      const wrapper = el.closest(".declaration-wrapper");
+      wrapper.style.borderColor = "var(--border)";
+      wrapper.style.backgroundColor = "#fafbfc";
+      
+      const errBox = document.getElementById("error-declaration");
+      errBox.textContent = "";
+      errBox.style.display = "none";
+      return;
+    }
+    
+    if (id === "commissionFormFilled") {
+      const container = document.getElementById("commFormSegmentContainer");
+      if (container) container.style.borderColor = "var(--border)";
+      
+      const errBox = document.getElementById("error-commissionFormFilled");
+      if (errBox) {
+        errBox.textContent = "";
+        errBox.style.display = "none";
+      }
+      return;
+    }
+    
+    el.classList.remove("invalid");
+    el.classList.remove("valid");
+    
+    const errBox = document.getElementById("error-" + id);
+    if (errBox) {
+      errBox.textContent = "";
+      errBox.style.display = "none";
+    }
+  }
+
+  /**
+   * Helper to check for future dates.
+   * @param {string} dateVal Date string YYYY-MM-DD
+   */
+  function isFutureDate(dateVal) {
+    if (!dateVal) return false;
+    const selectedDate = new Date(dateVal);
+    // Remove hours to compare only date
+    selectedDate.setHours(0,0,0,0);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    return selectedDate > today;
+  }
+
+  /**
+   * Loops through all fields to check valid form entries.
+   * Auto-scrolls UI focus onto first invalid field found.
+   */
+  function validateAllFields() {
+    const fields = [
+      "employeeName", "phoneNumber", "email", "designation", 
+      "salary", "dateOfJoining", "dateOfLeaving", "reason",
+      "benefitsReceived", "pendingSalary", "retrenchmentCompensation", "otherCompensation",
+      "commissionFormFilled", "declaration"
+    ];
+    
+    let isAllValid = true;
+    let firstInvalidElement = null;
+    
+    fields.forEach(id => {
+      const isValid = validateField(id);
+      if (!isValid) {
+        isAllValid = false;
+        if (!firstInvalidElement) {
+          firstInvalidElement = document.getElementById(id);
+        }
+      }
+    });
+    
+    if (!isAllValid && firstInvalidElement) {
+      // Focus element and scroll smoothly to it
+      if (firstInvalidElement.type === "checkbox") {
+        firstInvalidElement.closest(".declaration-wrapper").scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      } else {
+        firstInvalidElement.focus();
+        firstInvalidElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    }
+    
+    return isAllValid;
+  }
+
+  /* ------------------- Server Transactions ------------------- */
+
+  /**
+   * Submits form values to google.script.run backend.
+   * @param {Event} event Form submit event
+   */
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    if (!validateAllFields()) {
+      showToast("error", i18n[currentLanguage].errFormGeneric);
+      return;
+    }
+    
+    // Show spinner overlay and disable submit button
+    showLoader(true);
+    document.getElementById("btnSubmitForm").disabled = true;
+    
+    // Assemble payload
+    const formData = {
+      employeeName: document.getElementById("employeeName").value,
+      phoneNumber: document.getElementById("phoneNumber").value,
+      email: document.getElementById("email").value,
+      employeeId: document.getElementById("employeeId").value,
+      designation: document.getElementById("designation").value,
+      salary: document.getElementById("salary").value,
+      dateOfJoining: document.getElementById("dateOfJoining").value,
+      employmentStatus: document.getElementById("employmentStatus").value,
+      dateOfLeaving: document.getElementById("dateOfLeaving").value,
+      reason: document.getElementById("reason").value,
+      benefitsReceived: document.getElementById("benefitsReceived").value,
+      pendingSalary: document.getElementById("pendingSalary").value,
+      retrenchmentCompensation: document.getElementById("retrenchmentCompensation").value,
+      otherCompensation: document.getElementById("otherCompensation").value,
+      declaration: document.getElementById("declaration").checked,
+      commissionFormFilled: document.getElementById("commissionFormFilled").value
+    };
+    
+    // If running in local browser preview (Live Server), simulate server response
+    if (typeof google === 'undefined' || typeof google.script === 'undefined') {
+      console.log("Local Preview Submit Simulation payload:", formData);
+      setTimeout(() => {
+        onFormSubmitSuccess({
+          success: true,
+          message: "Local Simulation: Details submitted successfully.",
+          submissionId: "TLR-2026-TEST"
+        });
+      }, 1500);
+      return;
+    }
+
+    // Call server-side submit endpoint
+    google.script.run
+      .withSuccessHandler(onFormSubmitSuccess)
+      .withFailureHandler(onFormSubmitFailure)
+      .submitForm(formData);
+  }
+
+  /**
+   * Handles successful responses from server-side submitForm.
+   * @param {Object} response Standard JSON response payload
+   */
+  function onFormSubmitSuccess(response) {
+    showLoader(false);
+    document.getElementById("btnSubmitForm").disabled = false;
+    
+    if (response.success) {
+      // Toggle to success screen view
+      document.getElementById("formViewPane").classList.remove("active");
+      const successPane = document.getElementById("successViewPane");
+      successPane.classList.add("active");
+      
+      // Update success badge ID
+      document.getElementById("successIdBadge").textContent = response.submissionId;
+      showToast("success", response.message);
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      // Handle validation/duplicate errors
+      showToast("error", response.message);
+    }
+  }
+
+  /**
+   * Handles connection failure during server-side submits.
+   */
+  function onFormSubmitFailure(error) {
+    showLoader(false);
+    document.getElementById("btnSubmitForm").disabled = false;
+    showToast("error", "Network connection failed: " + error.message);
+  }
+
+  /**
+   * Resets form values and validations to enter another submission.
+   */
+  function resetVerificationForm() {
+    document.getElementById("employeeVerificationForm").reset();
+    
+    // Clear validation highlighting classes
+    const fields = [
+      "employeeName", "phoneNumber", "email", "designation", 
+      "salary", "dateOfJoining", "dateOfLeaving", "reason",
+      "benefitsReceived", "pendingSalary", "retrenchmentCompensation", "otherCompensation",
+      "declaration", "commissionFormFilled"
+    ];
+    
+    fields.forEach(clearFieldError);
+    
+    // Clear dynamic Yes/No toggles
+    document.getElementById("commissionFormFilled").value = "";
+    const segmentBg = document.getElementById("segmentBg");
+    const btnYes = document.getElementById("btnOptYes");
+    const btnNo = document.getElementById("btnOptNo");
+    if (segmentBg) {
+      segmentBg.style.opacity = "0";
+      segmentBg.style.transform = "translateX(0)";
+    }
+    if (btnYes) btnYes.style.color = "var(--primary-dark)";
+    if (btnNo) btnNo.style.color = "var(--primary-dark)";
+    
+    // Reset status layout
+    handleStatusChange();
+    
+    // Reset back to form view
+    document.getElementById("successViewPane").classList.remove("active");
+    document.getElementById("formViewPane").classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ------------------- Admin Dashboard Logic ------------------- */
+
+  /**
+   * Validates PIN and fetches administrative submission data.
+   */
+  function handleAdminLogin(event) {
+    event.preventDefault();
+    
+    const pin = document.getElementById("adminPin").value.trim();
+    if (pin.length === 0) {
+      showToast("error", "PIN code cannot be empty.");
+      return;
+    }
+    
+    showLoader(true);
+    
+    // If running in local browser preview (Live Server), simulate admin login
+    if (typeof google === 'undefined' || typeof google.script === 'undefined') {
+      console.log("Local Preview Admin Login Simulation pin:", pin);
+      setTimeout(() => {
+        if (pin === "1234") {
+          onAdminLoginSuccess({
+            success: true,
+            submissions: [
+              {
+                submissionId: "TLR-2026-0001",
+                timestamp: "2026-07-19 12:00:00",
+                employeeName: "Abhinandpn",
+                phoneNumber: "8086324067",
+                email: "dev.abhinanpn@gmail.com",
+                employeeId: "",
+                designation: "Developer",
+                salary: 40000,
+                dateOfJoining: "2023-03-12",
+                employmentStatus: "Resigned",
+                dateOfLeaving: "2026-07-19",
+                reason: "Moving to higher studies",
+                benefitsReceived: 0,
+                pendingSalary: 0,
+                retrenchmentCompensation: 0,
+                otherCompensation: 0,
+                commissionFormFilled: "Yes"
+              }
+            ]
+          });
+        } else {
+          onAdminLoginSuccess({
+            success: false,
+            message: "Invalid security PIN code."
+          });
+        }
+      }, 1000);
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(onAdminLoginSuccess)
+      .withFailureHandler(onAdminLoginFailure)
+      .getAdminData(pin);
+  }
+
+  /**
+   * Successful admin login handler.
+   */
+  function onAdminLoginSuccess(response) {
+    showLoader(false);
+    
+    if (response.success) {
+      // Hide admin login box
+      document.getElementById("adminChallengePane").style.display = "none";
+      // Show admin stats and table panels
+      document.getElementById("adminDashboardPane").style.display = "block";
+      
+      // Store globally
+      allSubmissions = response.data.submissions;
+      
+      // Update statistics card view
+      updateStats(response.data.stats, allSubmissions);
+      
+      // Populate designation filters
+      buildDesignationDropdown(allSubmissions);
+      
+      // Render submissions rows
+      renderAdminTable();
+      showToast("success", "Admin authorization successful.");
+    } else {
+      showToast("error", response.message);
+      document.getElementById("adminPin").value = "";
+      document.getElementById("adminPin").focus();
+    }
+  }
+
+  /**
+   * Connection failure during admin retrieval.
+   */
+  function onAdminLoginFailure(error) {
+    showLoader(false);
+    showToast("error", "Failed to contact database: " + error.message);
+  }
+
+  /**
+   * Refreshes KPI metrics card values.
+   */
+  function updateStats(stats, list) {
+    document.getElementById("statTotalCount").textContent = stats.totalEmployees;
+    document.getElementById("statPendingSalary").textContent = "₹" + stats.totalPendingSalary.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    
+    // Count active and exited
+    let active = 0;
+    let exited = 0;
+    
+    list.forEach(row => {
+      if (row.employmentStatus === "Still Working") {
+        active++;
+      } else {
+        exited++;
+      }
+    });
+    
+    document.getElementById("statActiveCount").textContent = active;
+    document.getElementById("statExitedCount").textContent = exited;
+  }
+
+  /**
+   * Extracts unique designations to load filter.
+   */
+  function buildDesignationDropdown(list) {
+    uniqueDesignations.clear();
+    list.forEach(row => {
+      if (row.designation) {
+        uniqueDesignations.add(row.designation.trim());
+      }
+    });
+    
+    const dropdown = document.getElementById("designationFilter");
+    // Clear dynamic options while preserving "All" index 0
+    dropdown.options.length = 1;
+    
+    uniqueDesignations.forEach(desig => {
+      const option = document.createElement("option");
+      option.value = desig;
+      option.textContent = desig;
+      dropdown.appendChild(option);
+    });
+  }
+
+  /**
+   * Matches, filters, and renders the submissions list to the table UI.
+   */
+  function renderAdminTable() {
+    const tableBody = document.getElementById("submissionsTableBody");
+    tableBody.innerHTML = "";
+    
+    const searchQuery = document.getElementById("searchBox").value.toLowerCase().trim();
+    const statusVal = document.getElementById("statusFilter").value;
+    const designationVal = document.getElementById("designationFilter").value;
+    const langData = i18n[currentLanguage];
+    
+    const filteredList = allSubmissions.filter(row => {
+      // 1. Search Query filter (matches Name, Phone, ID, designation)
+      const nameMatch = row.employeeName.toLowerCase().indexOf(searchQuery) !== -1;
+      const phoneMatch = row.phoneNumber.indexOf(searchQuery) !== -1;
+      const idMatch = row.employeeId.toLowerCase().indexOf(searchQuery) !== -1;
+      const designMatch = row.designation.toLowerCase().indexOf(searchQuery) !== -1;
+      const subIdMatch = row.submissionId.toLowerCase().indexOf(searchQuery) !== -1;
+      
+      const passesSearch = (nameMatch || phoneMatch || idMatch || designMatch || subIdMatch || (row.commissionFormFilled || "").toLowerCase().indexOf(searchQuery) !== -1);
+      
+      // 2. Status dropdown filter
+      const passesStatus = (statusVal === "ALL" || row.employmentStatus === statusVal);
+      
+      // 3. Designation dropdown filter
+      const passesDesignation = (designationVal === "ALL" || row.designation === designationVal);
+      
+      return (passesSearch && passesStatus && passesDesignation);
+    });
+    
+    if (filteredList.length === 0) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 9;
+      td.style.textAlign = "center";
+      td.style.padding = "24px";
+      td.style.color = "var(--text-secondary)";
+      td.textContent = currentLanguage === "en" ? "No matches found." : "വിവരങ്ങൾ ലഭ്യമല്ല.";
+      tr.appendChild(td);
+      tableBody.appendChild(tr);
+      return;
+    }
+    
+    // Populate rows
+    filteredList.forEach(row => {
+      const tr = document.createElement("tr");
+      
+      // Translate dynamic status for badging
+      let badgeClass = "badge-still-working";
+      let statusText = row.employmentStatus;
+      
+      if (row.employmentStatus === "Resigned") {
+        badgeClass = "badge-resigned";
+        statusText = langData.statusResigned;
+      } else if (row.employmentStatus === "Terminated") {
+        badgeClass = "badge-terminated";
+        statusText = langData.statusTerminated;
+      } else {
+        statusText = langData.statusWorking;
+      }
+      
+      const currencyStr = "₹" + row.pendingSalary.toLocaleString("en-IN", { minimumFractionDigits: 2 });
+      
+      tr.innerHTML = `
+        <td><strong>${row.submissionId}</strong></td>
+        <td>${row.employeeName} ${row.employeeId ? `<br><small style="color:var(--text-secondary)">ID: ${row.employeeId}</small>` : ''}</td>
+        <td>${row.phoneNumber}</td>
+        <td>${row.designation}</td>
+        <td><span class="badge ${badgeClass}">${statusText}</span></td>
+        <td>${currencyStr}</td>
+        <td>${row.dateOfJoining}</td>
+        <td>${row.dateOfLeaving || '-'}</td>
+        <td><span class="badge" style="background-color: ${row.commissionFormFilled === 'Yes' ? 'var(--success-light)' : '#f1f5f9'}; color: ${row.commissionFormFilled === 'Yes' ? 'var(--success)' : 'var(--text-secondary)'};">${row.commissionFormFilled === 'Yes' ? langData.yesOpt : langData.noOpt}</span></td>
+      `;
+      
+      tableBody.appendChild(tr);
+    });
+  }
+
+  /**
+   * Generates a downloadable CSV attachment.
+   */
+  function exportToCSV() {
+    if (allSubmissions.length === 0) {
+      showToast("error", "No data to export.");
+      return;
+    }
+    
+    const headers = [
+      "Submission ID", "Timestamp", "Employee Name", "Phone Number", "Email", 
+      "Employee ID", "Designation", "Salary", "Date of Joining", "Date of Leaving", 
+      "Status", "Reason", "Benefits Received", "Pending Salary", "Retrenchment Amount", "Other Pending", "Commission Form Filled"
+    ];
+    
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // Prepend BOM for Excel compatibility
+    csvContent += headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\r\n";
+    
+    allSubmissions.forEach(row => {
+      const record = [
+        row.submissionId,
+        row.timestamp,
+        row.employeeName,
+        row.phoneNumber,
+        row.email,
+        row.employeeId,
+        row.designation,
+        row.salary,
+        row.dateOfJoining,
+        row.dateOfLeaving,
+        row.employmentStatus,
+        row.reason,
+        row.benefitsReceived,
+        row.pendingSalary,
+        row.retrenchmentCompensation,
+        row.otherCompensation,
+        row.commissionFormFilled
+      ];
+      csvContent += record.map(toSafeCsvCell).join(",") + "\r\n";
+    });
+    
+    // Trigger download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    const dateStr = new Date().toISOString().split('T')[0];
+    
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Talrop_Employee_Submissions_${dateStr}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  /**
+   * Quotes a CSV field and prevents spreadsheet applications from evaluating
+   * employee-entered values as formulas.
+   */
+  function toSafeCsvCell(value) {
+    let text = value === null || value === undefined ? "" : String(value);
+    if (/^[=+\-@]/.test(text)) {
+      text = "'" + text;
+    }
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  /* ------------------- Helper UI Alerts ------------------- */
+
+  /**
+   * Shows global loader overlay.
+   */
+  function showLoader(show) {
+    const overlay = document.getElementById("spinnerOverlay");
+    if (show) {
+      overlay.classList.add("active");
+    } else {
+      overlay.classList.remove("active");
+    }
+  }
+
+  /**
+   * Generates temporary toast alert notification popup.
+   * @param {string} type Alert category ("success" | "error")
+   * @param {string} message Description text
+   */
+  function showToast(type, message) {
+    const container = document.getElementById("toastContainer");
+    
+    const toast = document.createElement("div");
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === "success" ? "✓" : "⚠";
+    const iconClass = type === "success" ? "toast-icon-success" : "toast-icon-error";
+    
+    toast.innerHTML = `
+      <span class="toast-icon ${iconClass}">${icon}</span>
+      <div class="toast-body">${message}</div>
+      <span class="toast-close">&times;</span>
+    `;
+    
+    // Close button event
+    toast.querySelector(".toast-close").addEventListener("click", () => {
+      toast.style.opacity = "0";
+      setTimeout(() => toast.remove(), 250);
+    });
+    
+    container.appendChild(toast);
+    
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 250);
+      }
+    }, 4000);
+  }
+</script>

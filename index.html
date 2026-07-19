@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Talrop Employee Details Verification System</title>
+    <!-- Material Icons Link -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- CSS Styles Inlined -->
+    <?!= include('styles'); ?>
+    
+    <!-- Local CSS Fallback Loader for Browser Preview (e.g. Live Server) -->
+    <script>
+      if (typeof google === 'undefined') {
+        fetch('styles.html')
+          .then(r => r.text())
+          .then(html => {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const style = temp.querySelector('style');
+            if (style) {
+              document.head.appendChild(style);
+            }
+          })
+          .catch(err => console.error('Local style loader error:', err));
+      }
+    </script>
+  </head>
+  <body>
+
+    <!-- Header Area -->
+    <header>
+      <div class="header-container">
+        <div class="logo-area">
+          <div class="logo-icon">T</div>
+          <div class="logo-text">
+            <h1 data-i18n="appName">Talrop Employee Details Verification System</h1>
+            <p data-i18n="subAppName">Verification Portal</p>
+          </div>
+        </div>
+        
+        <div class="header-controls">
+          <!-- Language Selector Button -->
+          <button type="button" class="btn-lang" onclick="toggleLanguage()">
+            <span class="material-icons-outlined" style="font-size: 16px;">language</span>
+            <span id="langBtnText" data-i18n="langBtn">മലയാളം</span>
+          </button>
+          
+          <!-- Administration Portal Toggle Button -->
+          <button type="button" id="tabBtnAdmin" class="btn-admin-toggle" onclick="switchTab('admin')" data-i18n="adminTab">
+            Admin Portal
+          </button>
+          <button type="button" id="tabBtnForm" class="btn-admin-toggle" style="display: none; background-color: var(--primary);" onclick="switchTab('form')" data-i18n="formTab">
+            Verification Form
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main View Wrappers -->
+    <main class="main-wrapper">
+      
+      <!-- 1. FORM SUBMISSION VIEW -->
+      <section id="formViewPane" class="view-pane active">
+        <form id="employeeVerificationForm" novalidate>
+          
+          <!-- Introductory Description Card -->
+          <div class="card intro-card" style="background-color: var(--primary-light); border-left: 4px solid var(--primary); margin-bottom: 24px; padding: 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); position: relative;">
+            <div style="display: flex; gap: 16px; align-items: flex-start;">
+              <span class="material-icons-outlined" style="color: var(--primary); font-size: 24px; margin-top: 2px;">info</span>
+              <div style="font-size: 13.5px; line-height: 1.6; color: var(--primary-dark); font-weight: 500;">
+                <p style="margin-bottom: 8px;" data-i18n="introPara1">This form is created to collect accurate and verified information from Talrop employees, as some previously submitted records contain duplicate, incomplete, or incorrect details.</p>
+                <p style="margin-bottom: 8px;" data-i18n="introPara2">Please provide your correct information to help prepare a single, verified employee database for pending salary, gratuity, and other employment-related claims.</p>
+                <p style="font-weight: 700;" data-i18n="introPara3">Kindly submit this form only once and ensure all information is accurate before submitting.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Personal Information Card -->
+          <div class="card">
+            <div class="card-header">
+              <span class="material-icons-outlined card-header-icon">person</span>
+              <div class="card-header-text">
+                <h2 data-i18n="personalHeader">Personal Information</h2>
+                <p data-i18n="personalSub">Enter your official personal identification details</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="grid-layout">
+                
+                <div class="form-group">
+                  <input type="text" id="employeeName" class="form-control" placeholder=" " required>
+                  <label class="form-label" for="employeeName">
+                    <span data-i18n="empNameLabel">Employee Name</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-employeeName"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="tel" id="phoneNumber" class="form-control" placeholder=" " required>
+                  <label class="form-label" for="phoneNumber">
+                    <span data-i18n="phoneLabel">Phone Number</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-phoneNumber"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="email" id="email" class="form-control" placeholder=" " required>
+                  <label class="form-label" for="email">
+                    <span data-i18n="emailLabel">Email Address</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-email"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="text" id="employeeId" class="form-control" placeholder=" ">
+                  <label class="form-label" for="employeeId" data-i18n="empIdLabel">Employee ID (Optional)</label>
+                  <div class="validation-error" id="error-employeeId"></div>
+                </div>
+
+                <div class="form-group full-width" style="margin-top: 10px;">
+                  <label class="form-label" style="position: static; pointer-events: auto; margin-bottom: 6px; font-weight: 600; font-size: 13.5px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
+                    <span data-i18n="commFormQ">Have you already filled out the Google Form given by the Employment Commission?</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  
+                  <div class="segmented-control" id="commFormSegmentContainer" style="position: relative; display: flex; background-color: var(--primary-light); padding: 4px; border-radius: 30px; border: 1.5px solid var(--border); overflow: hidden; width: 100%; max-width: 320px; margin-top: 8px; transition: var(--transition);">
+                    <!-- Sliding background pill -->
+                    <div id="segmentBg" class="segment-bg" style="position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background-color: var(--primary); border-radius: 26px; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(0, 129, 112, 0.2); opacity: 0; transform: translateX(0);"></div>
+                    
+                    <button type="button" id="btnOptYes" class="segment-btn" style="flex: 1; border: none; background: transparent; padding: 12px; font-size: 13.5px; font-weight: 700; color: var(--primary-dark); cursor: pointer; position: relative; z-index: 2; transition: color 0.25s ease;" onclick="selectCommissionFormSegment('Yes')">
+                      <span data-i18n="yesOpt">Yes</span>
+                    </button>
+                    <button type="button" id="btnOptNo" class="segment-btn" style="flex: 1; border: none; background: transparent; padding: 12px; font-size: 13.5px; font-weight: 700; color: var(--primary-dark); cursor: pointer; position: relative; z-index: 2; transition: color 0.25s ease;" onclick="selectCommissionFormSegment('No')">
+                      <span data-i18n="noOpt">No</span>
+                    </button>
+                  </div>
+                  
+                  <!-- Hidden input to store value for validation and submission -->
+                  <input type="hidden" id="commissionFormFilled" required>
+                  
+                  <div class="validation-error" id="error-commissionFormFilled"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Employment Details Card -->
+          <div class="card">
+            <div class="card-header">
+              <span class="material-icons-outlined card-header-icon">work</span>
+              <div class="card-header-text">
+                <h2 data-i18n="employmentHeader">Employment Details</h2>
+                <p data-i18n="employmentSub">Provide your record of service inside the company</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="grid-layout">
+                
+                <div class="form-group">
+                  <input type="text" id="designation" class="form-control" placeholder=" " required>
+                  <label class="form-label" for="designation">
+                    <span data-i18n="designationLabel">Designation</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-designation"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="number" id="salary" class="form-control" placeholder=" " min="0" required>
+                  <label class="form-label" for="salary">
+                    <span data-i18n="salaryLabel">Last Drawn Monthly Salary</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-salary"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="date" id="dateOfJoining" class="form-control" required>
+                  <label class="form-label" for="dateOfJoining">
+                    <span data-i18n="joiningDateLabel">Date of Joining</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-dateOfJoining"></div>
+                </div>
+
+                <div class="form-group">
+                  <select id="employmentStatus" class="form-control" required>
+                    <option value="" disabled selected data-i18n="statusSelect">Select Employment Status</option>
+                    <option value="Still Working" data-i18n="statusWorking">Still Working</option>
+                    <option value="Resigned" data-i18n="statusResigned">Resigned</option>
+                    <option value="Terminated" data-i18n="statusTerminated">Terminated</option>
+                  </select>
+                  <label class="form-label" for="employmentStatus">
+                    <span data-i18n="statusLabel">Employment Status</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-employmentStatus"></div>
+                </div>
+
+                <!-- Conditional Leaving Fields (Resigned/Terminated) -->
+                <div id="leavingSection" class="form-group full-width" style="display: none;">
+                  <div class="grid-layout" style="gap: 24px 20px; padding: 0;">
+                    
+                    <div class="form-group">
+                      <input type="date" id="dateOfLeaving" class="form-control">
+                      <label class="form-label" for="dateOfLeaving">
+                        <span data-i18n="leavingDateLabel">Date of Resignation / Termination</span>
+                        <span class="required-star">*</span>
+                      </label>
+                      <div class="validation-error" id="error-dateOfLeaving"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <textarea id="reason" class="form-control" placeholder=" "></textarea>
+                      <label class="form-label" for="reason">
+                        <span data-i18n="reasonLabel">Reason for Resignation / Termination</span>
+                        <span class="required-star">*</span>
+                      </label>
+                      <div class="validation-error" id="error-reason"></div>
+                    </div>
+                    
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Compensation Details Card -->
+          <div class="card">
+            <div class="card-header">
+              <span class="material-icons-outlined card-header-icon">payment</span>
+              <div class="card-header-text">
+                <h2 data-i18n="compensationHeader">Compensation Details</h2>
+                <p data-i18n="compensationSub">Declare outstanding dues and payments (INR)</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="grid-layout">
+                
+                <div class="form-group">
+                  <input type="number" id="benefitsReceived" class="form-control" placeholder=" " value="0" min="0" required>
+                  <label class="form-label" for="benefitsReceived">
+                    <span data-i18n="benefitsLabel">Benefits / Amount Already Received</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-benefitsReceived"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="number" id="pendingSalary" class="form-control" placeholder=" " value="0" min="0" required>
+                  <label class="form-label" for="pendingSalary">
+                    <span data-i18n="pendingSalaryLabel">Pending Salary</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-pendingSalary"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="number" id="retrenchmentCompensation" class="form-control" placeholder=" " value="0" min="0" required>
+                  <label class="form-label" for="retrenchmentCompensation">
+                    <span data-i18n="retrenchmentLabel">Retrenchment Compensation Amount</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-retrenchmentCompensation"></div>
+                </div>
+
+                <div class="form-group">
+                  <input type="number" id="otherCompensation" class="form-control" placeholder=" " value="0" min="0" required>
+                  <label class="form-label" for="otherCompensation">
+                    <span data-i18n="otherCompLabel">Other Pending Compensation Benefits</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="validation-error" id="error-otherCompensation"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Declaration Section -->
+          <div class="card">
+            <div class="card-header">
+              <span class="material-icons-outlined card-header-icon">verified_user</span>
+              <div class="card-header-text">
+                <h2 data-i18n="declarationHeader">Declaration</h2>
+                <p data-i18n="declarationSub">Please read and confirm the accuracy of information</p>
+              </div>
+            </div>
+            <div class="card-body" style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="declaration-wrapper">
+                <input type="checkbox" id="declaration" class="declaration-checkbox" required>
+                <label for="declaration" class="declaration-text" data-i18n="declarationText">
+                  I hereby declare that the information provided above is true and accurate to the best of my knowledge.
+                </label>
+              </div>
+              <div class="validation-error" id="error-declaration" style="margin-left: 4px;"></div>
+            </div>
+          </div>
+
+          <!-- Form Submit Action Bar -->
+          <div class="submit-bar">
+            <button type="submit" id="btnSubmitForm" class="btn btn-primary">
+              <span class="material-icons-outlined" style="font-size: 18px;">send</span>
+              <span data-i18n="submitBtn">Verify & Submit Details</span>
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- 2. SUCCESS SCREEN VIEW -->
+      <section id="successViewPane" class="view-pane">
+        <div class="card success-card">
+          <div class="success-checkmark">✓</div>
+          <h2 class="success-title" data-i18n="successHeader">Details Verified Successfully</h2>
+          <p class="success-desc" data-i18n="successDesc">Your details have been securely recorded. Please note down your unique Submission ID for future reference.</p>
+          
+          <div class="id-badge" id="successIdBadge">TLR-2026-0001</div>
+          
+          <div>
+            <button type="button" id="btnNewForm" class="btn btn-primary">
+              <span class="material-icons-outlined" style="font-size: 18px;">add_circle_outline</span>
+              <span data-i18n="successBtn">Submit Another Form</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. AUTHORIZED ADMIN PANEL VIEW -->
+      <section id="adminViewPane" class="view-pane">
+        
+        <!-- Challenge Screen -->
+        <div id="adminChallengePane" class="card admin-login-card">
+          <div class="admin-login-icon">
+            <span class="material-icons-outlined" style="font-size: 32px;">lock</span>
+          </div>
+          <h2 class="admin-login-title" data-i18n="adminHeader">Authorized Personnel Login</h2>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;" data-i18n="adminSub">
+            Enter the administrative security PIN to view recorded employee sheets.
+          </p>
+          
+          <form id="adminLoginForm">
+            <div class="form-group" style="margin-bottom: 20px;">
+              <input type="password" id="adminPin" class="form-control" placeholder=" " style="text-align: center; letter-spacing: 6px; font-weight: 700; font-size: 18px;" maxlength="10" required>
+              <label class="form-label" for="adminPin" data-i18n="adminPinPlaceholder" style="left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none;">Enter 4-digit PIN</label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <span class="material-icons-outlined" style="font-size: 18px;">vpn_key</span>
+              <span data-i18n="adminAccessBtn">Access Admin Dashboard</span>
+            </button>
+            <button type="button" class="btn" style="width: 100%; margin-top: 12px; background-color: transparent; border: 1.5px solid var(--border); color: var(--text-secondary);" onclick="switchTab('form')">
+              <span class="material-icons-outlined" style="font-size: 18px;">arrow_back</span>
+              <span data-i18n="backToHomeBtn">Back to Home</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Dashboard Screen (hidden until PIN success) -->
+        <div id="adminDashboardPane" style="display: none;">
+          
+          <!-- Statistics Cards Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon blue">
+                <span class="material-icons-outlined">assignment</span>
+              </div>
+              <div class="stat-details">
+                <h3 data-i18n="statTotalEmployees">Total Submissions</h3>
+                <p id="statTotalCount">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">
+                <span class="material-icons-outlined">monetization_on</span>
+              </div>
+              <div class="stat-details">
+                <h3 data-i18n="statTotalPending">Total Pending Dues (INR)</h3>
+                <p id="statPendingSalary">₹0.00</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon purple">
+                <span class="material-icons-outlined">people</span>
+              </div>
+              <div class="stat-details">
+                <h3 data-i18n="statStillWorking">Active Employees</h3>
+                <p id="statActiveCount">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon orange">
+                <span class="material-icons-outlined">group_remove</span>
+              </div>
+              <div class="stat-details">
+                <h3 data-i18n="statExited">Exited</h3>
+                <p id="statExitedCount">0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters Section Card -->
+          <div class="card admin-controls-card">
+            <h2 style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--primary-dark); margin-bottom: 16px; letter-spacing: 0.5px;" data-i18n="filterHeader">Search and Filters</h2>
+            
+            <div class="admin-controls-grid">
+              
+              <!-- Search bar -->
+              <div class="form-group">
+                <input type="text" id="searchBox" class="form-control" placeholder=" " style="padding-left: 40px;">
+                <label class="form-label" for="searchBox" data-i18n="searchPlaceholder" style="left: 40px;">Search by Name, Phone, or ID...</label>
+                <span class="material-icons-outlined" style="position: absolute; left: 14px; top: 18px; color: var(--text-secondary); font-size: 18px;">search</span>
+              </div>
+
+              <!-- Status Dropdown filter -->
+              <div class="form-group">
+                <select id="statusFilter" class="form-control">
+                  <option value="ALL" data-i18n="allOptions">All Records</option>
+                  <option value="Still Working" data-i18n="statusWorking">Still Working</option>
+                  <option value="Resigned" data-i18n="statusResigned">Resigned</option>
+                  <option value="Terminated" data-i18n="statusTerminated">Terminated</option>
+                </select>
+                <label class="form-label" for="statusFilter" data-i18n="filterStatus">Filter by Status</label>
+              </div>
+
+              <!-- Designation Dropdown filter -->
+              <div class="form-group">
+                <select id="designationFilter" class="form-control">
+                  <option value="ALL" data-i18n="allOptions">All Records</option>
+                </select>
+                <label class="form-label" for="designationFilter" data-i18n="filterDesignation">Filter by Designation</label>
+              </div>
+
+              <!-- Export spreadsheet Button -->
+              <div class="form-group">
+                <button type="button" class="btn btn-primary" onclick="exportToCSV()" style="padding: 14px; box-shadow: none; border-radius: var(--radius-sm); width: 100%;">
+                  <span class="material-icons-outlined" style="font-size: 18px;">download</span>
+                  <span data-i18n="exportBtn">Export to Excel (CSV)</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Submissions Table Card -->
+          <div class="card table-card">
+            <div class="table-scroll-container">
+              <table class="submissions-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="tableColId">ID</th>
+                    <th data-i18n="tableColName">Employee Name</th>
+                    <th data-i18n="tableColPhone">Phone Number</th>
+                    <th data-i18n="tableColDesignation">Designation</th>
+                    <th data-i18n="tableColStatus">Status</th>
+                    <th data-i18n="tableColPending">Pending Salary</th>
+                    <th data-i18n="tableColJoined">Joined On</th>
+                    <th data-i18n="tableColLeft">Exited On</th>
+                    <th data-i18n="tableColComm">Commission Form?</th>
+                  </tr>
+                </thead>
+                <tbody id="submissionsTableBody">
+                  <!-- JS dynamically populates rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Full-screen Loading Spinner Overlay -->
+    <div id="spinnerOverlay" class="spinner-overlay">
+      <div class="spinner"></div>
+      <p style="font-weight: 500; font-size: 14px;" data-i18n="submitProcessing">Processing Submission...</p>
+    </div>
+
+    <!-- Toast Notification Alerts Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JS Logic Inlined -->
+    <?!= include('javascript'); ?>
+    
+    <!-- Local JS Fallback Loader for Browser Preview (e.g. Live Server) -->
+    <script>
+      if (typeof google === 'undefined') {
+        fetch('javascript.html')
+          .then(r => r.text())
+          .then(html => {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const script = temp.querySelector('script');
+            if (script) {
+              const runScript = document.createElement('script');
+              runScript.textContent = script.textContent;
+              document.body.appendChild(runScript);
+            }
+          })
+          .catch(err => console.error('Local JS loader error:', err));
+      }
+    </script>
+  </body>
+</html>
