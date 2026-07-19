@@ -8,7 +8,7 @@
 
 // Non-secret service configuration. Store ADMIN_PIN and, for standalone scripts,
 // SPREADSHEET_ID under Project Settings > Script Properties.
-var GOOGLE_FORM_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxBvGh_Kb--9umURYLCUrBXVlm4WZhsuBTKD39nBm9Lgm6K1h4vDuyTfKTEmzIBgVdw/exec";
+var GOOGLE_FORM_URL = "https://docs.google.com/forms/d/1OI3ZY51dfsIVLPXkLtrshGBLF21ehrvOkzyfdi1Q5QY/edit";
 
 /**
  * Handles HTTP GET requests to serve the web application.
@@ -108,62 +108,81 @@ function submitForm(formData) {
 }
 
 /**
- * Forwards a validated employee submission to the separately deployed
- * Google Forms web app and verifies its JSON response.
+ * Creates a response directly in the connected Google Form. Keeping this
+ * operation in the main backend avoids exposing a separate public proxy.
  * @param {Object} data Sanitized and validated employee details
  * @return {{success: boolean, message: string}}
  */
 function submitToGoogleForm(data) {
   try {
-    var payload = {
-      employeeName: data.employeeName,
-      phoneNumber: data.phoneNumber,
-      emailAddress: data.email,
-      employeeId: data.employeeId || "",
-      designation: data.designation,
-      lastDrawnSalary: data.salary,
-      dateOfJoining: data.dateOfJoining,
-      employmentStatus: data.employmentStatus,
-      dateOfLeaving: data.dateOfLeaving || "",
-      reason: data.reason || "",
-      benefitsReceived: data.benefitsReceived,
-      pendingSalary: data.pendingSalary,
-      retrenchmentCompensation: data.retrenchmentCompensation,
-      otherPendingBenefits: data.otherCompensation,
-      commissionFormFilled: data.commissionFormFilled,
-      declaration: "I hereby declare that the information provided above is true and accurate to the best of my knowledge."
+    var answersByTitle = {
+      "employee name": data.employeeName,
+      "phone number": data.phoneNumber,
+      "email address": data.email,
+      "employee id": data.employeeId || "",
+      "designation": data.designation,
+      "last drawn monthly salary": data.salary,
+      "date of joining": data.dateOfJoining,
+      "employment status": data.employmentStatus,
+      "date of resignation / termination": data.dateOfLeaving || "",
+      "reason for resignation / termination": data.reason || "",
+      "benefits / amount already received": data.benefitsReceived,
+      "benefits / amount already received from the company": data.benefitsReceived,
+      "pending salary": data.pendingSalary,
+      "retrenchment compensation amount": data.retrenchmentCompensation,
+      "other pending compensation benefits": data.otherCompensation,
+      "have you already filled out the google form given by the employment commission?": data.commissionFormFilled,
+      "declaration": data.declaration
     };
 
-    var response = UrlFetchApp.fetch(GOOGLE_FORM_WEB_APP_URL, {
-      method: "post",
-      payload: payload,
-      followRedirects: true,
-      muteHttpExceptions: true
+    var form = FormApp.openByUrl(GOOGLE_FORM_URL);
+    var formResponse = form.createResponse();
+
+    form.getItems().forEach(function(item) {
+      var normalizedTitle = item.getTitle().toLowerCase().trim().replace(/\s+/g, " ");
+      var answer = answersByTitle[normalizedTitle];
+
+      if (answer === undefined || answer === null || answer === "") {
+        return;
+      }
+
+      switch (item.getType()) {
+        case FormApp.ItemType.TEXT:
+          formResponse.withItemResponse(item.asTextItem().createResponse(String(answer)));
+          break;
+        case FormApp.ItemType.PARAGRAPH_TEXT:
+          formResponse.withItemResponse(item.asParagraphTextItem().createResponse(String(answer)));
+          break;
+        case FormApp.ItemType.MULTIPLE_CHOICE:
+          formResponse.withItemResponse(item.asMultipleChoiceItem().createResponse(String(answer)));
+          break;
+        case FormApp.ItemType.LIST:
+          formResponse.withItemResponse(item.asListItem().createResponse(String(answer)));
+          break;
+        case FormApp.ItemType.CHECKBOX:
+          var checkboxItem = item.asCheckboxItem();
+          var checkboxAnswers = answer === true
+            ? [checkboxItem.getChoices()[0].getValue()]
+            : String(answer).split(",").map(function(value) { return value.trim(); });
+          formResponse.withItemResponse(checkboxItem.createResponse(checkboxAnswers));
+          break;
+        case FormApp.ItemType.DATE:
+          var dateParts = String(answer).split("-");
+          var dateAnswer = new Date(
+            Number(dateParts[0]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[2])
+          );
+          formResponse.withItemResponse(item.asDateItem().createResponse(dateAnswer));
+          break;
+      }
     });
 
-    var statusCode = response.getResponseCode();
-    var responseText = response.getContentText();
-    var result;
-
-    try {
-      result = JSON.parse(responseText);
-    } catch (parseError) {
-      return {
-        success: false,
-        message: "The Google Form service returned an invalid response (HTTP " + statusCode + ")."
-      };
-    }
-
-    if (statusCode < 200 || statusCode >= 300 || !result.success) {
-      return {
-        success: false,
-        message: result.message || ("Google Form service returned HTTP " + statusCode + ".")
-      };
-    }
+    formResponse.submit();
 
     return {
       success: true,
-      message: result.message || "Google Form response recorded."
+      message: "Google Form response recorded."
     };
   } catch (error) {
     Logger.log("Error inside submitToGoogleForm: " + error.toString());
@@ -189,14 +208,29 @@ function getAdminData(pin) {
       };
     }
 
+    var userKey = Session.getTemporaryActiveUserKey() || "anonymous";
+    var cache = CacheService.getScriptCache();
+    var attemptKey = "admin_attempts_" + userKey;
+    var failedAttempts = Number(cache.get(attemptKey) || 0);
+
+    if (failedAttempts >= 5) {
+      return {
+        success: false,
+        message: "Too many incorrect attempts. Please wait 10 minutes before trying again."
+      };
+    }
+
     // Trim and compare PIN
     var cleanPin = (pin || "").toString().trim();
     if (cleanPin !== adminPin) {
+      cache.put(attemptKey, String(failedAttempts + 1), 600);
       return {
         success: false,
         message: "Unauthorized access. Invalid PIN."
       };
     }
+
+    cache.remove(attemptKey);
     
     // Fetch all submissions from Google Sheets database
     var submissions = fetchSubmissions();
