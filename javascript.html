@@ -979,42 +979,11 @@
     
     showLoader(true);
     
-    // If running in local browser preview (Live Server), simulate admin login
+    // Admin authentication requires the Apps Script backend. Never embed a
+    // real administrative PIN or submission data in public client code.
     if (typeof google === 'undefined' || typeof google.script === 'undefined') {
-      console.log("Local Preview Admin Login Simulation pin:", pin);
-      setTimeout(() => {
-        if (pin === "770880") {
-          onAdminLoginSuccess({
-            success: true,
-            submissions: [
-              {
-                submissionId: "TLR-2026-0001",
-                timestamp: "2026-07-19 12:00:00",
-                employeeName: "Abhinandpn",
-                phoneNumber: "8086324067",
-                email: "dev.abhinanpn@gmail.com",
-                employeeId: "",
-                designation: "Developer",
-                salary: 40000,
-                dateOfJoining: "2023-03-12",
-                employmentStatus: "Resigned",
-                dateOfLeaving: "2026-07-19",
-                reason: "Moving to higher studies",
-                benefitsReceived: 0,
-                pendingSalary: 0,
-                retrenchmentCompensation: 0,
-                otherCompensation: 0,
-                commissionFormFilled: "Yes"
-              }
-            ]
-          });
-        } else {
-          onAdminLoginSuccess({
-            success: false,
-            message: "Invalid security PIN code."
-          });
-        }
-      }, 1000);
+      showLoader(false);
+      showToast("error", "Admin login is available only on the deployed Apps Script portal.");
       return;
     }
 
